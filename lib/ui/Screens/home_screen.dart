@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutterapi/models/movie.dart';
+import 'package:flutterapi/services/api_service.dart';
 import 'package:flutterapi/utile/constant.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -10,6 +12,22 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  List<Movie> ?movies;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getMovies();
+  }
+  void getMovies(){
+  ApiService().getPopularMovie(pageNumber: 1).then((movielist){
+ setState(() {
+   movies = movielist;
+ });
+  });
+}
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Container(
             color: kPrimaryColor,
             height: 500,
+            child: movies== null ? const Center():Image.network(movies![0].posterURL()),
           ),
           const SizedBox(
             height: 15,
