@@ -34,11 +34,13 @@ class ApiService {
     });
     if (response.statusCode == 200) {
       Map data = response.data;
+      print(data); 
       List<dynamic> results = data['results'];
       List<Movie> movies = [];
       for (Map<String, dynamic> json in results) {
         Movie movie = Movie.fromJson(json);
         movies.add(movie);
+        
       }
       return movies;
     } else {

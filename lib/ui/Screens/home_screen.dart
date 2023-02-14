@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutterapi/models/movie.dart';
-import 'package:flutterapi/services/api_service.dart';
+
+import 'package:flutterapi/repositories/data_repository.dart';
+
 import 'package:flutterapi/utile/constant.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -12,24 +14,22 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<Movie> ?movies;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getMovies();
   }
-  void getMovies(){
-  ApiService().getPopularMovie(pageNumber: 1).then((movielist){
- setState(() {
-   movies = movielist;
- });
-  });
-}
 
+  void getMovies() async {
+    final dataProvider = Provider.of<DataRepository>(context, listen: false);
+    await dataProvider.getPopularMovie();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final dataProvider = Provider.of<DataRepository>(context);
+
     return Scaffold(
       backgroundColor: kBackgroundColor,
       appBar: AppBar(
@@ -41,7 +41,12 @@ class _HomeScreenState extends State<HomeScreen> {
           Container(
             color: kPrimaryColor,
             height: 500,
-            child: movies== null ? const Center():Image.network(movies![0].posterURL()),
+            child: dataProvider.popularMovieList.isEmpty
+                ? const Center()
+                : Image.network(
+                    dataProvider.popularMovieList[1].posterURL(),
+                    fit: BoxFit.cover,
+                  ),
           ),
           const SizedBox(
             height: 15,
@@ -67,9 +72,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     width: 110,
                     margin: const EdgeInsets.only(right: 8),
                     color: Colors.yellow,
-                    child: Center(
-                      child: Text(index.toString()),
-                    ),
+                    child: dataProvider.popularMovieList.isEmpty
+                        ? Center(
+                            child: Text(index.toString()),
+                          )
+                        : Image.network(
+                            dataProvider.popularMovieList[index].posterURL(),
+                            fit: BoxFit.cover,
+                          ),
                   );
                 }),
           ),

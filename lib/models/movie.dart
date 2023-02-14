@@ -1,10 +1,10 @@
-
 import 'package:flutterapi/services/api.dart';
+
 class Movie {
   final int id;
   final String name;
- final String description;
-  final String ? posterPath;
+  final String description;
+  final String? posterPath;
   Movie({
     required this.id,
     required this.name,
@@ -13,10 +13,10 @@ class Movie {
   });
 
   Movie copyWith({
-   int? id,
+    int? id,
     String? name,
     String? description,
-    String ? posterPath,
+    String? posterPath,
   }) {
     return Movie(
       id: id ?? this.id,
@@ -28,14 +28,14 @@ class Movie {
 
   factory Movie.fromJson(Map<String, dynamic> map) {
     return Movie(
-      id: map['id'] ,
-      name: map['title'] ,
-      description: map['overview'], 
-      posterPath: map['poster_path'], 
+      id: map['id'],
+      name: map['title'],
+      description: map['overview'],
+      posterPath: map['poster_path'],
     );
   }
- String posterURL(){
-  Api api = Api();
-  return api.baseImageUrl+posterPath!;
- } 
+  String posterURL() {
+    Api api = Api();
+    return api.baseImageUrl + posterPath!;
+  }
 }
